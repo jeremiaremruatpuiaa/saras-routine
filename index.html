@@ -1,0 +1,560 @@
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<canvas id="cc"></canvas>
+<div id="starPop"></div>
+<div id="ob"></div>
+<div id="app" style="display:none"></div>
+<div id="dov" class="ov" onclick="closeDrawer()"></div>
+<div id="drw" class="drw">
+  <div class="drw-hd"><span>⚙️ Settings</span><button onclick="closeDrawer()" class="drw-x">✕</button></div>
+  <button class="drw-it" onclick="closeDrawer();openEdit()">✏️ Edit Routine</button>
+  <button class="drw-it" onclick="closeDrawer();openProf()">👤 Change Profile</button>
+</div>
+<div id="editMod" class="fmod"></div>
+<div id="profMod" class="fmod"></div>
+<div id="epov" class="ov ep-ov" onclick="closeEp()"></div>
+<div id="epick" class="ep"></div>
+
+<style>
+:root{--purple:#9b59b6;--pd:#6c3483;--pl:#c39bd3;--pink:#e91e8c;--bg:#fdf0f8;--text:#4a235a;--muted:#b0a0b8;--gold:#f39c12;--white:#fff;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;padding:14px;max-width:480px;margin:0 auto;}
+#cc{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
+#starPop{position:fixed;pointer-events:none;z-index:9998;font-weight:900;font-family:'Nunito',sans-serif;font-size:1.3rem;display:none;color:var(--gold);text-shadow:0 2px 6px rgba(0,0,0,.25);}
+
+/* ONBOARDING */
+.ob-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;}
+.ob-logo{font-size:4.5rem;animation:float 2s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.ob-h{font-size:2rem;font-weight:900;color:var(--pd);margin:8px 0 4px;}
+.ob-s{font-size:.9rem;color:var(--muted);font-weight:600;margin-bottom:26px;}
+.ob-lbl{font-size:.95rem;font-weight:800;color:var(--text);margin-bottom:7px;text-align:left;width:100%;max-width:320px;}
+.ob-in{width:100%;max-width:320px;padding:13px 17px;border-radius:16px;border:2.5px solid var(--pl);font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:700;color:var(--text);outline:none;transition:border-color .2s;margin-bottom:22px;}
+.ob-in:focus{border-color:var(--purple);}
+.av-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:340px;width:100%;margin-bottom:26px;}
+.av{width:56px;height:56px;border-radius:50%;border:3px solid transparent;background:var(--white);font-size:1.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .2s;}
+.av:hover{transform:scale(1.1);}
+.av.sel{border-color:var(--pink);background:#fce4ec;box-shadow:0 0 0 3px rgba(233,30,140,.2);transform:scale(1.15);}
+.go-btn{padding:15px 38px;border-radius:20px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--pd),var(--pink));color:#fff;font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:900;box-shadow:0 6px 20px rgba(155,89,182,.4);transition:transform .15s;}
+.go-btn:active{transform:scale(.97);}
+
+/* HEADER */
+.hdr{border-radius:22px;padding:14px 15px;color:#fff;margin-bottom:11px;box-shadow:0 6px 20px rgba(155,89,182,.4);display:flex;align-items:center;gap:10px;}
+.hdr.normal{background:linear-gradient(135deg,var(--pd),var(--purple),var(--pink));}
+.hdr.holiday{background:linear-gradient(135deg,#e67e22,#f39c12,#f1c40f);}
+.hav{font-size:2.2rem;}
+.hin{flex:1;min-width:0;}
+.hname{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hlvl{font-size:.75rem;font-weight:700;opacity:.9;margin-top:2px;}
+.hstars{text-align:right;flex-shrink:0;}
+.hsc{font-size:1.4rem;font-weight:900;display:block;}
+.hsl{font-size:.66rem;opacity:.85;}
+.ham{background:rgba(255,255,255,.2);border:none;border-radius:10px;color:white;font-size:1.2rem;padding:7px 10px;cursor:pointer;flex-shrink:0;}
+.ham:hover{background:rgba(255,255,255,.3);}
+
+/* DRAWER */
+.ov{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.35);z-index:10000;display:none;}
+.ov.show{display:block;}
+.drw{position:fixed;top:0;right:-290px;width:270px;height:100%;background:white;z-index:10001;transition:right .3s ease;box-shadow:-4px 0 24px rgba(0,0,0,.15);padding:20px 16px;}
+.drw.open{right:0;}
+.drw-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:1.05rem;font-weight:900;color:var(--pd);}
+.drw-x{background:var(--bg);border:none;border-radius:8px;padding:6px 10px;font-size:.9rem;cursor:pointer;color:var(--muted);font-weight:800;}
+.drw-it{display:block;width:100%;padding:14px 16px;margin-bottom:10px;border-radius:14px;border:none;background:var(--bg);font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;color:var(--text);cursor:pointer;text-align:left;}
+.drw-it:hover{background:#f3e5f5;}
+
+/* FULL MODAL */
+.fmod{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:10002;overflow-y:auto;transform:translateY(100%);transition:transform .3s ease;}
+.fmod.open{transform:translateY(0);}
+.em-top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:white;position:sticky;top:0;z-index:5;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.em-title{font-size:1rem;font-weight:900;color:var(--pd);}
+.em-back{padding:8px 13px;border-radius:10px;border:none;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:800;cursor:pointer;background:var(--bg);color:var(--muted);}
+.em-save{padding:8px 14px;border-radius:10px;border:none;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pd),var(--pink));color:white;}
+.em-stabs{display:flex;gap:6px;padding:11px 16px;overflow-x:auto;scrollbar-width:none;background:white;border-bottom:1px solid #f3e5f5;}
+.em-stabs::-webkit-scrollbar{display:none;}
+.em-stab{flex-shrink:0;padding:7px 11px;border-radius:10px;border:none;font-family:'Nunito',sans-serif;font-size:.76rem;font-weight:800;cursor:pointer;background:var(--bg);color:var(--muted);}
+.em-stab.act{background:linear-gradient(135deg,var(--pd),var(--pink));color:white;}
+.em-body{padding:14px;}
+.bath-note{background:#e8f5fe;border-radius:12px;padding:10px 12px;font-size:.74rem;font-weight:700;color:#2471a3;margin-bottom:12px;line-height:1.4;}
+.edit-row{display:flex;align-items:center;gap:7px;background:white;border-radius:14px;padding:9px 10px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.edit-mv{display:flex;flex-direction:column;gap:2px;flex-shrink:0;}
+.edit-mv button{background:var(--bg);border:none;border-radius:6px;width:22px;height:22px;font-size:.65rem;cursor:pointer;color:var(--muted);font-weight:900;display:flex;align-items:center;justify-content:center;}
+.edit-mv button:hover{background:#f3e5f5;color:var(--pd);}
+.edit-eb{background:var(--bg);border:none;border-radius:10px;font-size:1.4rem;width:42px;height:42px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.edit-eb:hover{background:#f3e5f5;}
+.edit-in{flex:1;border:none;outline:none;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;color:var(--text);background:transparent;min-width:0;}
+.edit-del{background:none;border:none;font-size:1.05rem;cursor:pointer;opacity:.5;flex-shrink:0;}
+.edit-del:hover{opacity:1;}
+.add-btn{width:100%;padding:12px;border-radius:14px;border:2px dashed var(--pl);background:white;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:800;color:var(--purple);cursor:pointer;margin-top:4px;}
+.add-btn:hover{background:#f8f0ff;}
+
+/* EMOJI PICKER */
+.ep-ov{z-index:10003;}
+.ep{position:fixed;bottom:-100%;left:0;right:0;max-height:58vh;background:white;border-radius:22px 22px 0 0;z-index:10004;transition:bottom .3s ease;overflow-y:auto;padding:0 16px 24px;}
+.ep.open{bottom:0;}
+.ep-hd{position:sticky;top:0;background:white;display:flex;justify-content:space-between;align-items:center;padding:14px 0 10px;border-bottom:1px solid #f3e5f5;z-index:1;}
+.ep-hd span{font-size:.95rem;font-weight:900;color:var(--pd);}
+.ep-close{background:var(--bg);border:none;border-radius:8px;padding:6px 12px;font-size:.82rem;font-weight:800;cursor:pointer;color:var(--muted);}
+.eg-title{font-size:.72rem;font-weight:800;color:var(--muted);margin:10px 0 5px;text-transform:uppercase;letter-spacing:.5px;}
+.eg-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin-bottom:4px;}
+.eg-btn{background:none;border:none;font-size:1.5rem;padding:5px;border-radius:8px;cursor:pointer;line-height:1;}
+.eg-btn:hover{background:var(--bg);}
+
+/* STATS, LEVEL, PROGRESS, TABS, SECTION, TASKS */
+.hol-btn{width:100%;padding:11px;border-radius:14px;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:800;cursor:pointer;margin-bottom:11px;transition:all .2s;}
+.hol-btn.off{border:2px dashed var(--pl);background:var(--white);color:var(--purple);}
+.hol-btn.on{border:2px solid #f39c12;background:#fff8e1;color:#e67e22;}
+.stats{display:flex;gap:10px;margin-bottom:11px;}
+.scard{flex:1;background:var(--white);border-radius:15px;padding:11px 13px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.sv{font-size:1.45rem;font-weight:900;color:var(--pd);display:block;}
+.sl{font-size:.7rem;font-weight:700;color:var(--muted);}
+.lvlc{background:var(--white);border-radius:15px;padding:11px 15px;margin-bottom:11px;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.lvlt{display:flex;justify-content:space-between;font-weight:800;color:var(--text);font-size:.8rem;margin-bottom:6px;}
+.lbg{height:12px;background:#f3e5f5;border-radius:7px;overflow:hidden;}
+.lfill{height:100%;background:linear-gradient(90deg,var(--gold),#f1c40f);border-radius:7px;transition:width .5s ease;}
+.pc{background:var(--white);border-radius:15px;padding:11px 15px;margin-bottom:11px;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.pt{display:flex;justify-content:space-between;font-weight:800;color:var(--pd);font-size:.83rem;margin-bottom:6px;}
+.pbg{height:14px;background:#f3e5f5;border-radius:7px;overflow:hidden;}
+.pfill{height:100%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:7px;transition:width .5s ease;}
+.pfill.hol{background:linear-gradient(90deg,#f39c12,#f1c40f);}
+.reward{text-align:center;font-size:.92rem;font-weight:800;background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-top:8px;display:none;animation:pop .4s ease;}
+.reward.hol{background:linear-gradient(90deg,#e67e22,#f1c40f);-webkit-background-clip:text;background-clip:text;}
+@keyframes pop{0%{transform:scale(.7);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.tabs{display:flex;gap:8px;margin-bottom:11px;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex:1;min-width:82px;padding:9px 5px;border-radius:13px;border:none;background:var(--white);color:var(--muted);font-family:'Nunito',sans-serif;font-size:.76rem;font-weight:800;cursor:pointer;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.07);transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.ti{font-size:1.25rem;}.td{font-size:.66rem;color:#c39bd3;font-weight:700;}
+.tab.active{background:linear-gradient(135deg,var(--pd),var(--pink));color:#fff;box-shadow:0 4px 14px rgba(155,89,182,.45);transform:translateY(-2px);}
+.tab.active .td{color:rgba(255,255,255,.8);}
+.sec{background:var(--white);border-radius:18px;padding:14px 14px 8px;box-shadow:0 2px 12px rgba(0,0,0,.07);}
+.sh{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:9px;border-bottom:2px dashed #f3e5f5;}
+.si{font-size:1.25rem;}.st{font-size:.95rem;font-weight:900;color:var(--pd);}.sc{margin-left:auto;font-size:.73rem;font-weight:700;color:var(--pl);}
+.task{display:flex;align-items:center;gap:10px;padding:10px 9px;border-radius:12px;margin-bottom:6px;background:var(--bg);transition:all .15s;user-select:none;}
+.task.u{cursor:pointer;}.task.u:hover{background:#f8e8ff;}.task.u:active{transform:scale(.97);}
+.task.d{background:linear-gradient(90deg,#f3e5f5,#fce4ec);cursor:default;}
+.task.hd{background:linear-gradient(90deg,#fff3cd,#fff8e1);cursor:default;}
+.task.d .tl,.task.hd .tl{text-decoration:line-through;color:var(--muted);}
+.cb{width:27px;height:27px;border-radius:50%;border:2.5px solid var(--pl);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;background:var(--white);transition:all .3s;color:#fff;font-weight:900;}
+.task.d .cb{background:linear-gradient(135deg,var(--purple),var(--pink));border-color:transparent;animation:cbp .3s ease;}
+.task.hd .cb{background:linear-gradient(135deg,#f39c12,#f1c40f);border-color:transparent;animation:cbp .3s ease;}
+@keyframes cbp{0%{transform:scale(.5)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+.te{font-size:1.1rem;}.tl{font-size:.88rem;font-weight:700;color:var(--text);flex:1;}
+</style>
+
+<script>
+// ── CONSTANTS ──────────────────────────────────────────
+const MORNING_DEF=[
+  {id:'m1',e:'⏰',l:'Wake up & stretch'},
+  {id:'m3',e:'👗',l:'Get dressed'},
+  {id:'m4',e:'🍳',l:'Eat breakfast'},
+  {id:'m2',e:'🦷',l:'Brush your teeth'},
+  {id:'m5',e:'🎒',l:'Pack your school bag'},
+];
+const AFTER_DEF=[
+  {id:'a1',e:'🧼',l:'Wash your hands'},
+  {id:'a5',e:'🍱',l:'Unpack tiffin'},
+  {id:'a3',e:'✏️',l:'Do your homework'},
+  {id:'a2',e:'🧹',l:'Help mom with chores'},
+];
+const NIGHT_DEF=[
+  {id:'n1',e:'🍽️',l:'Eat dinner'},
+  {id:'n3',e:'🦷',l:'Brush your teeth'},
+  {id:'n4',e:'📖',l:'Reading time (20 mins)'},
+  {id:'n5',e:'💤',l:'Lights out — sleep tight!'},
+];
+const WEEKEND_DEF=[
+  {id:'w1',e:'🛏️',l:'Make your bed'},
+  {id:'w2',e:'🧹',l:'Help with one chore'},
+  {id:'w3',e:'🌳',l:'Outdoor playtime'},
+  {id:'w4',e:'❤️',l:'Family time'},
+  {id:'w5',e:'🌙',l:'Bedtime routine'},
+];
+const HOLIDAY_DEF=[
+  {id:'h1',e:'🛏️',l:'Make your bed'},
+  {id:'h2',e:'🌳',l:'Play outside'},
+  {id:'h3',e:'📖',l:'Reading time'},
+  {id:'h4',e:'❤️',l:'Family time'},
+  {id:'h5',e:'🌙',l:'Bedtime routine'},
+];
+const BATH={id:'bath',e:'🛁',l:'Bath time'};
+
+const EG=[
+  {n:'⏰ Daily',e:['⏰','🌅','🌄','🌙','💤','😴','☀️','🌤️','🌈','✨','🌟','⭐','💫']},
+  {n:'🧼 Hygiene',e:['🛁','🚿','🦷','🧼','🪥','💊','🧴','🧻','🪒','🧽']},
+  {n:'👗 Clothing',e:['👗','👟','👕','👔','🧢','🎀','👒','👜','🧣','👛','🩰']},
+  {n:'🍳 Food',e:['🍳','🥐','🥞','🍎','🍱','🥗','🍕','🍫','🥤','🧃','🍦','🧁','🍰','🥪','🍔','🥑','🍇','🍓','🫐','🍊']},
+  {n:'📚 School',e:['📚','📖','✏️','📝','📐','🖊️','🎒','🏫','📓','📏','📌','🔍','📎','🖍️']},
+  {n:'🏠 Home',e:['🛏️','🧹','🍽️','🧺','🏠','🪣','🌿','🛋️','🚪','🪑','🪴','🧸']},
+  {n:'🌳 Play',e:['🌳','🏃','🎨','🎮','🎵','🏊','⚽','🚴','🎭','🎪','🎠','🎡','🎯','🏖️','🌴','🎸','🎤','🎺','🎻','🎲','🃏','🧩']},
+  {n:'❤️ Love',e:['❤️','💕','🤗','💝','🌸','🫂','💖','💗','💛','💚','💙','💜','🧡','🥰']},
+  {n:'🏆 Wins',e:['🏆','🥇','💪','🙌','⭐','🌟','💫','✨','🎉','🎊','🎁','🎀','🥳','🤩','😎']},
+  {n:'🐱 Animals',e:['🦄','🐱','🐼','🐰','🦋','🐶','🐸','🐨','🐯','🦊','🐮','🐷','🦁','🐬','🦒','🦓','🐘','🦜']},
+  {n:'🌺 Nature',e:['🌺','🌻','🌹','🌷','🌸','🍀','🌿','🌲','🌴','🌵','🌙','☀️','🌈','🌊','❄️','🔥','🌍']},
+  {n:'😊 Faces',e:['😊','😍','🥰','😎','🤩','🥳','😴','🤗','😇','🙃','🤓','😋','🤪','😜','😝']},
+];
+
+const LEVELS=[{min:0,name:'Seedling',emoji:'🌱'},{min:10,name:'Rising Star',emoji:'⭐'},{min:30,name:'Super Star',emoji:'🌟'},{min:70,name:'Champion',emoji:'💫'},{min:150,name:'Legend',emoji:'👑'}];
+const AVATARS=['🦄','🌟','👸','🦋','🐱','🐼','🌈','🐰','🌺','🎀','😊','🥰','🤩','😎','🥳','🦁','🐬','🦊','🐨','🎨','⭐','💖','🌸','🍀','🎵'];
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// ── DATE HELPERS ───────────────────────────────────────
+function routineDay(){
+  const n=new Date(),b=n.getHours()>=6?n:new Date(n-86400000);
+  return `${b.getFullYear()}-${String(b.getMonth()+1).padStart(2,'0')}-${String(b.getDate()).padStart(2,'0')}`;
+}
+function prevDay(s){const[y,m,d]=s.split('-').map(Number),p=new Date(y,m-1,d-1);return `${p.getFullYear()}-${String(p.getMonth()+1).padStart(2,'0')}-${String(p.getDate()).padStart(2,'0')}`;}
+function msToReset(){const n=new Date(),nx=new Date(n);nx.setHours(6,0,0,0);if(n.getHours()>=6)nx.setDate(nx.getDate()+1);return nx-n;}
+function getLvl(s){let lv=LEVELS[0];for(const l of LEVELS)if(s>=l.min)lv=l;return lv;}
+function getNextLvl(s){for(const l of LEVELS)if(s<l.min)return l;return null;}
+function calcStreak(cd,hd){
+  const cs=new Set(cd),hs=new Set(hd||[]);let day=routineDay(),n=0;
+  while(true){if(cs.has(day)){n++;day=prevDay(day);}else if(hs.has(day)){day=prevDay(day);}else break;}
+  return n;
+}
+
+let customTasks=null;
+function base(k,def){return(customTasks&&customTasks[k])?customTasks[k]:def;}
+
+function getSections(d){
+  const m=[...base('morning',MORNING_DEF)],nt=[...base('night',NIGHT_DEF)];
+  if(d===1)m.splice(1,0,BATH);
+  if(d===2||d===4)nt.splice(1,0,BATH);
+  if(d===0||d===6){
+    const tasks=[...base('weekend',WEEKEND_DEF)];
+    if(d===6)tasks.splice(tasks.length-1,0,BATH);
+    return [{id:'weekend',title:'Weekend Fun List',icon:'🌈',tasks}];
+  }
+  return[{id:'morning',title:'Morning Routine',icon:'🌅',tasks:m},{id:'after',title:'After School',icon:'📚',tasks:[...base('after',AFTER_DEF)]},{id:'night',title:'Night Routine',icon:'🌙',tasks:nt}];
+}
+function getHolSec(){return{id:'holiday',title:'Holiday Fun!',icon:'🏖️',tasks:[...base('holiday',HOLIDAY_DEF)]};}
+
+// ── AUDIO ──────────────────────────────────────────────
+let ac=null;
+function initAc(){if(!ac)try{ac=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}if(ac?.state==='suspended')ac.resume();}
+function tone(f,dur,type='sine',vol=0.2,delay=0){if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=type;o.frequency.value=f;const t=ac.currentTime+delay;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.001,t+dur);o.start(t);o.stop(t+dur);}
+function playTick(){initAc();tone(650,.12,'sine',.18);tone(1000,.1,'sine',.14,.07);}
+function playSec(){initAc();[523,659,784].forEach((f,i)=>tone(f,.3,'sine',.18,i*.12));}
+function playWin(){initAc();[523,659,784,1047,1047,784,1047].forEach((f,i)=>tone(f,.35,'sine',.2,i*.13));}
+
+// ── CONFETTI ───────────────────────────────────────────
+const cc=document.getElementById('cc'),c2=cc.getContext('2d');
+let cparts=[],crun=false;
+const COLS=['#9b59b6','#e91e8c','#f48fb1','#ffd700','#c39bd3','#f39c12','#ff6b9d'];
+const HCOLS=['#f39c12','#f1c40f','#e67e22','#ff6b9d','#ffd700','#27ae60'];
+function launchConfetti(hol=false){
+  cc.width=window.innerWidth;cc.height=window.innerHeight;
+  const p=hol?HCOLS:COLS;
+  cparts=Array.from({length:160},()=>({x:Math.random()*cc.width,y:-20,r:Math.random()*8+4,color:p[Math.floor(Math.random()*p.length)],vx:(Math.random()-.5)*5,vy:Math.random()*4+2,spin:(Math.random()-.5)*.3,angle:Math.random()*Math.PI*2,shape:Math.random()>.5?'r':'c'}));
+  if(!crun){crun=true;animC();}
+}
+function animC(){c2.clearRect(0,0,cc.width,cc.height);cparts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.angle+=p.spin;p.vy+=.06;c2.save();c2.translate(p.x,p.y);c2.rotate(p.angle);c2.fillStyle=p.color;if(p.shape==='c'){c2.beginPath();c2.arc(0,0,p.r/2,0,Math.PI*2);c2.fill();}else c2.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.5);c2.restore();});cparts=cparts.filter(p=>p.y<cc.height+20);if(cparts.length)requestAnimationFrame(animC);else{crun=false;c2.clearRect(0,0,cc.width,cc.height);}}
+
+// ── STAR POP ───────────────────────────────────────────
+const sp=document.getElementById('starPop');
+function showStarPop(x,y){sp.textContent='+1 ⭐';sp.style.cssText=`left:${x-20}px;top:${y-40}px;display:block;opacity:1;transform:translateY(0);transition:none;`;setTimeout(()=>{sp.style.cssText+=`;transition:all .8s ease;opacity:0;transform:translateY(-55px);`;},50);setTimeout(()=>{sp.style.display='none';},950);}
+
+// ── STATE ──────────────────────────────────────────────
+let profile=null,gamedata={totalStars:0,completedDays:[],holidayDays:[]},rState={},activeTab='',secs=[];
+let rDay=routineDay(),rKey=`routine:${rDay}`;
+const now=new Date(),dow=now.getDay();
+let selAv=AVATARS[0];
+
+function refreshSecs(){secs=rState._holiday?[getHolSec()]:getSections(dow);}
+
+// ── STORAGE ────────────────────────────────────────────
+async function sv(k,v){try{await window.storage.set(k,JSON.stringify(v));}catch(e){}}
+async function ld(k){try{const r=await window.storage.get(k);return r?JSON.parse(r.value):null;}catch(e){return null;}}
+
+async function loadAll(){
+  profile=await ld('profile');
+  const gd=await ld('gamedata');
+  if(gd){gamedata=gd;if(!gamedata.holidayDays)gamedata.holidayDays=[];}
+  customTasks=await ld('customTasks');
+  rState=(await ld(rKey))||{};
+  refreshSecs();activeTab=secs[0].id;
+  profile?showMain():showOnboarding();
+}
+
+// ── ONBOARDING ─────────────────────────────────────────
+function buildAvGrid(containerId,currentSel,onSelect){
+  const g=document.getElementById(containerId);if(!g)return;
+  g.innerHTML='';
+  AVATARS.forEach(av=>{
+    const b=document.createElement('button');
+    b.className='av'+(av===currentSel?' sel':'');b.textContent=av;
+    b.onclick=()=>{onSelect(av);g.querySelectorAll('.av').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');};
+    g.appendChild(b);
+  });
+}
+
+function showOnboarding(){
+  document.getElementById('ob').innerHTML=`<div class="ob-wrap">
+    <div class="ob-logo">✨</div><div class="ob-h">Hello there!</div>
+    <div class="ob-s">Let's set up your daily routine 🌸</div>
+    <div class="ob-lbl">What's your name?</div>
+    <input class="ob-in" id="nin" placeholder="Type your name..." maxlength="20"/>
+    <div class="ob-lbl">Pick your avatar!</div>
+    <div class="av-grid" id="avGrid"></div>
+    <button class="go-btn" onclick="submitOb()">Let's Go! 🚀</button>
+  </div>`;
+  buildAvGrid('avGrid',AVATARS[0],av=>selAv=av);
+  document.getElementById('nin').addEventListener('keydown',e=>{if(e.key==='Enter')submitOb();});
+}
+
+async function submitOb(){
+  const name=(document.getElementById('nin').value||'').trim();
+  if(!name){document.getElementById('nin').style.borderColor='var(--pink)';return;}
+  profile={name,avatar:selAv};await sv('profile',profile);
+  document.getElementById('ob').innerHTML='';showMain();
+}
+
+// ── DRAWER ─────────────────────────────────────────────
+function openDrawer(){document.getElementById('dov').classList.add('show');document.getElementById('drw').classList.add('open');}
+function closeDrawer(){document.getElementById('dov').classList.remove('show');document.getElementById('drw').classList.remove('open');}
+
+// ── MAIN ───────────────────────────────────────────────
+function showMain(){document.getElementById('app').style.display='block';renderAll();setTimeout(()=>location.reload(),msToReset());}
+
+function renderAll(){
+  const isHol=!!rState._holiday;
+  document.getElementById('app').innerHTML=`
+    <div id="hdr"></div>
+    <div id="holBtn"></div>
+    <div class="stats" id="stats"></div>
+    <div id="lvl"></div>
+    <div class="pc">
+      <div class="pt"><span>${isHol?'🏖️ Holiday Progress':'⭐ Today\'s Progress'}</span><span id="ptxt">0/0</span></div>
+      <div class="pbg"><div class="${isHol?'pfill hol':'pfill'}" id="pfill" style="width:0%"></div></div>
+      <div class="reward${isHol?' hol':''}" id="rwd">${isHol?'🎉 Amazing holiday! Great job! 🏖️✨':'🎉 You\'re a superstar! Every task done! 🌟💖'}</div>
+    </div>
+    <div class="tabs" id="tabs"></div>
+    <div id="sdiv"></div>`;
+  renderHdr();renderHolBtn();renderStats();renderLvl();renderTabs();renderSec();updateProg();
+}
+
+function renderHdr(){
+  const el=document.getElementById('hdr');if(!el)return;
+  const lv=getLvl(gamedata.totalStars),isHol=!!rState._holiday;
+  el.innerHTML=`<div class="hdr ${isHol?'holiday':'normal'}">
+    <div class="hav">${isHol?'🏖️':profile.avatar}</div>
+    <div class="hin"><div class="hname">${profile.name}'s ${isHol?'Holiday!':'Routine'}</div>
+    <div class="hlvl">${isHol?'🌴 Holiday Mode':`${lv.emoji} ${lv.name}`} · ${DAYS[dow]}, ${MONTHS[now.getMonth()]} ${now.getDate()}</div></div>
+    <div class="hstars"><span class="hsc">⭐ ${gamedata.totalStars}</span><span class="hsl">Stars</span></div>
+    <button class="ham" onclick="openDrawer()">☰</button>
+  </div>`;
+}
+
+function renderHolBtn(){
+  const el=document.getElementById('holBtn');if(!el)return;
+  const isHol=!!rState._holiday;
+  el.innerHTML=`<button class="hol-btn ${isHol?'on':'off'}" onclick="toggleHoliday()">${isHol?'🏖️ Holiday Mode On — Tap to Switch Back':'🏖️ Mark Today as Holiday'}</button>`;
+}
+
+function renderStats(){
+  const el=document.getElementById('stats');if(!el)return;
+  const streak=calcStreak(gamedata.completedDays,gamedata.holidayDays),isHol=!!rState._holiday;
+  el.innerHTML=`<div class="scard"><span class="sv">🔥 ${streak}</span><span class="sl">Day Streak${isHol?' 🏖️':''}</span></div>
+    <div class="scard"><span class="sv">🏆 ${gamedata.completedDays.length}</span><span class="sl">Days Completed</span></div>`;
+}
+
+function renderLvl(){
+  const el=document.getElementById('lvl');if(!el)return;
+  const s=gamedata.totalStars,lv=getLvl(s),nx=getNextLvl(s);
+  const pct=nx?Math.round(((s-lv.min)/(nx.min-lv.min))*100):100;
+  el.innerHTML=`<div class="lvlc"><div class="lvlt"><span>${lv.emoji} ${lv.name}</span><span style="color:var(--muted);font-size:.75rem">${nx?`Next: ${nx.emoji} ${nx.name} at ${nx.min}⭐`:'👑 Max Level!'}</span></div><div class="lbg"><div class="lfill" style="width:${pct}%"></div></div></div>`;
+}
+
+function renderTabs(){
+  const el=document.getElementById('tabs');if(!el)return;
+  if(secs.length<=1){el.innerHTML='';return;}
+  el.innerHTML='';
+  secs.forEach(s=>{
+    const done=s.tasks.filter(t=>rState[t.id]).length;
+    const b=document.createElement('button');
+    b.className='tab'+(activeTab===s.id?' active':'');
+    b.innerHTML=`<span class="ti">${s.icon}</span>${s.title}<span class="td">${done}/${s.tasks.length}</span>`;
+    b.onclick=()=>{activeTab=s.id;renderTabs();renderSec();};
+    el.appendChild(b);
+  });
+}
+
+function renderSec(){
+  const sd=document.getElementById('sdiv');if(!sd)return;
+  const isHol=!!rState._holiday,sec=secs.find(s=>s.id===activeTab)||secs[0];
+  sd.innerHTML='';const el=document.createElement('div');el.className='sec';
+  const done=sec.tasks.filter(t=>rState[t.id]).length;
+  el.innerHTML=`<div class="sh"><span class="si">${sec.icon}</span><span class="st">${sec.title}</span><span class="sc" id="scc">${done}/${sec.tasks.length}</span></div>`;
+  sec.tasks.forEach(t=>{
+    const isDone=!!rState[t.id],div=document.createElement('div');
+    div.className=`task ${isDone?(isHol?'hd':'d'):'u'}`;div.dataset.id=t.id;
+    div.innerHTML=`<div class="cb">${isDone?'✓':''}</div><span class="te">${t.e}</span><span class="tl">${t.l}</span>`;
+    if(!isDone)div.onclick=ev=>checkTask(t.id,ev);
+    el.appendChild(div);
+  });
+  sd.appendChild(el);
+}
+
+function updateProg(){
+  const all=secs.flatMap(s=>s.tasks),done=all.filter(t=>rState[t.id]).length,pct=all.length?(done/all.length)*100:0;
+  const pt=document.getElementById('ptxt'),pf=document.getElementById('pfill'),rw=document.getElementById('rwd');
+  if(pt)pt.textContent=`${done}/${all.length}`;if(pf)pf.style.width=pct+'%';
+  if(rw)rw.style.display=(done===all.length&&all.length>0)?'block':'none';
+}
+
+// ── EDIT ROUTINE ───────────────────────────────────────
+const EDIT_SECS=[{k:'morning',l:'🌅 Morning'},{k:'after',l:'📚 After School'},{k:'night',l:'🌙 Night'},{k:'weekend',l:'🌈 Weekend'},{k:'holiday',l:'🏖️ Holiday'}];
+let editSec='morning',editDraft={},epCb=null;
+
+function openEdit(){
+  editDraft={
+    morning:JSON.parse(JSON.stringify(base('morning',MORNING_DEF))),
+    after:JSON.parse(JSON.stringify(base('after',AFTER_DEF))),
+    night:JSON.parse(JSON.stringify(base('night',NIGHT_DEF))),
+    weekend:JSON.parse(JSON.stringify(base('weekend',WEEKEND_DEF))),
+    holiday:JSON.parse(JSON.stringify(base('holiday',HOLIDAY_DEF))),
+  };
+  editSec='morning';
+  const m=document.getElementById('editMod');
+  m.innerHTML=`
+    <div class="em-top">
+      <button class="em-back" onclick="closeEdit()">← Back</button>
+      <span class="em-title">✏️ Edit Routine</span>
+      <button class="em-save" onclick="saveEdit()">✓ Save</button>
+    </div>
+    <div class="em-stabs" id="emStabs"></div>
+    <div class="em-body" id="emBody"></div>`;
+  m.classList.add('open');
+  renderEditTabs();renderEditContent();
+}
+
+function closeEdit(){document.getElementById('editMod').classList.remove('open');}
+
+async function saveEdit(){
+  customTasks=JSON.parse(JSON.stringify(editDraft));
+  await sv('customTasks',customTasks);
+  refreshSecs();activeTab=secs[0].id;
+  renderAll();closeEdit();
+}
+
+function renderEditTabs(){
+  const el=document.getElementById('emStabs');if(!el)return;
+  el.innerHTML='';
+  EDIT_SECS.forEach(s=>{
+    const b=document.createElement('button');
+    b.className='em-stab'+(editSec===s.k?' act':'');
+    b.textContent=s.l;
+    b.onclick=()=>{editSec=s.k;renderEditTabs();renderEditContent();};
+    el.appendChild(b);
+  });
+}
+
+function renderEditContent(){
+  const el=document.getElementById('emBody');if(!el)return;
+  const tasks=editDraft[editSec];
+  let html=`<div class="bath-note">🛁 <b>Bath time</b> is added automatically — Mon morning · Tue & Thu night · Sat night. No need to add it manually.</div>`;
+  el.innerHTML=html;
+  tasks.forEach((t,i)=>{
+    const row=document.createElement('div');row.className='edit-row';
+    row.innerHTML=`
+      <div class="edit-mv">
+        <button onclick="mvTask(${i},-1)">▲</button>
+        <button onclick="mvTask(${i},1)">▼</button>
+      </div>
+      <button class="edit-eb" id="eb_${i}" onclick="openEp(${i})">${t.e}</button>
+      <input class="edit-in" value="${t.l.replace(/"/g,'&quot;')}" oninput="editDraft['${editSec}'][${i}].l=this.value"/>
+      <button class="edit-del" onclick="delTask(${i})">🗑️</button>`;
+    el.appendChild(row);
+  });
+  const add=document.createElement('button');
+  add.className='add-btn';add.textContent='+ Add Task';add.onclick=addTask;
+  el.appendChild(add);
+}
+
+function mvTask(i,dir){
+  const t=editDraft[editSec],j=i+dir;
+  if(j<0||j>=t.length)return;
+  [t[i],t[j]]=[t[j],t[i]];renderEditContent();
+}
+function delTask(i){editDraft[editSec].splice(i,1);renderEditContent();}
+function addTask(){editDraft[editSec].push({id:`t${Date.now()}`,e:'⭐',l:'New Task'});renderEditContent();}
+
+// ── EMOJI PICKER ───────────────────────────────────────
+function openEp(taskIdx){
+  epCb=(emoji)=>{editDraft[editSec][taskIdx].e=emoji;renderEditContent();closeEp();};
+  const el=document.getElementById('epick');
+  let html=`<div class="ep-hd"><span>Pick an Emoji</span><button class="ep-close" onclick="closeEp()">✕ Close</button></div>`;
+  EG.forEach(g=>{
+    html+=`<div class="eg-title">${g.n}</div><div class="eg-grid">`;
+    g.e.forEach(em=>{html+=`<button class="eg-btn" onclick="epCb('${em}')">${em}</button>`;});
+    html+='</div>';
+  });
+  el.innerHTML=html;
+  document.getElementById('epov').classList.add('show');
+  el.classList.add('open');
+}
+function closeEp(){document.getElementById('epov').classList.remove('show');document.getElementById('epick').classList.remove('open');}
+
+// ── CHANGE PROFILE ─────────────────────────────────────
+let profSelAv='';
+function openProf(){
+  profSelAv=profile.avatar;
+  const m=document.getElementById('profMod');
+  m.innerHTML=`
+    <div class="em-top">
+      <button class="em-back" onclick="closeProfMod()">← Back</button>
+      <span class="em-title">👤 Change Profile</span>
+      <button class="em-save" onclick="saveProf()">✓ Save</button>
+    </div>
+    <div class="em-body">
+      <div class="ob-lbl" style="margin-bottom:8px">Your name</div>
+      <input class="ob-in" id="profName" value="${profile.name}" maxlength="20" style="margin-bottom:20px"/>
+      <div class="ob-lbl" style="margin-bottom:8px">Your avatar</div>
+      <div class="av-grid" id="profAvGrid"></div>
+    </div>`;
+  buildAvGrid('profAvGrid',profSelAv,av=>profSelAv=av);
+  m.classList.add('open');
+}
+function closeProfMod(){document.getElementById('profMod').classList.remove('open');}
+async function saveProf(){
+  const name=(document.getElementById('profName').value||'').trim();
+  if(!name)return;
+  profile={name,avatar:profSelAv};
+  await sv('profile',profile);
+  closeProfMod();renderHdr();
+}
+
+// ── HOLIDAY TOGGLE ─────────────────────────────────────
+async function toggleHoliday(){
+  rState._holiday=!rState._holiday;rState._bonus=false;
+  await sv(rKey,rState);refreshSecs();activeTab=secs[0].id;renderAll();
+}
+
+// ── CHECK TASK ─────────────────────────────────────────
+async function checkTask(id,ev){
+  rState[id]=true;sv(rKey,rState);playTick();
+  if(ev)showStarPop(ev.clientX,ev.clientY);
+  gamedata.totalStars++;sv('gamedata',gamedata);
+  renderHdr();renderLvl();
+  const item=document.querySelector(`[data-id="${id}"]`);
+  if(item){const isHol=!!rState._holiday;item.className=`task ${isHol?'hd':'d'}`;item.querySelector('.cb').textContent='✓';item.onclick=null;}
+  const sec=secs.find(s=>s.tasks.some(t=>t.id===id));
+  if(sec){
+    const done=sec.tasks.filter(t=>rState[t.id]).length;
+    const scc=document.getElementById('scc');if(scc)scc.textContent=`${done}/${sec.tasks.length}`;
+    renderTabs();if(done===sec.tasks.length)playSec();
+  }
+  updateProg();
+  const all=secs.flatMap(s=>s.tasks);
+  if(all.every(t=>rState[t.id])&&!rState._bonus){
+    rState._bonus=true;gamedata.totalStars+=5;
+    const isHol=!!rState._holiday;
+    if(isHol){if(!gamedata.holidayDays.includes(rDay))gamedata.holidayDays.push(rDay);}
+    else{if(!gamedata.completedDays.includes(rDay))gamedata.completedDays.push(rDay);}
+    await sv('gamedata',gamedata);await sv(rKey,rState);
+    playWin();setTimeout(()=>launchConfetti(isHol),300);setTimeout(()=>launchConfetti(isHol),1800);
+    renderHdr();renderLvl();renderStats();
+  }
+}
+
+loadAll();
+</script>
