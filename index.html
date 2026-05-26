@@ -21,8 +21,6 @@
 body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;padding:14px;max-width:480px;margin:0 auto;}
 #cc{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
 #starPop{position:fixed;pointer-events:none;z-index:9998;font-weight:900;font-family:'Nunito',sans-serif;font-size:1.3rem;display:none;color:var(--gold);text-shadow:0 2px 6px rgba(0,0,0,.25);}
-
-/* ONBOARDING */
 .ob-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;}
 .ob-logo{font-size:4.5rem;animation:float 2s ease-in-out infinite;}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
@@ -37,22 +35,15 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;paddi
 .av.sel{border-color:var(--pink);background:#fce4ec;box-shadow:0 0 0 3px rgba(233,30,140,.2);transform:scale(1.15);}
 .go-btn{padding:15px 38px;border-radius:20px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--pd),var(--pink));color:#fff;font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:900;box-shadow:0 6px 20px rgba(155,89,182,.4);transition:transform .15s;}
 .go-btn:active{transform:scale(.97);}
-
-/* HEADER */
 .hdr{border-radius:22px;padding:14px 15px;color:#fff;margin-bottom:11px;box-shadow:0 6px 20px rgba(155,89,182,.4);display:flex;align-items:center;gap:10px;}
 .hdr.normal{background:linear-gradient(135deg,var(--pd),var(--purple),var(--pink));}
 .hdr.holiday{background:linear-gradient(135deg,#e67e22,#f39c12,#f1c40f);}
-.hav{font-size:2.2rem;}
-.hin{flex:1;min-width:0;}
+.hav{font-size:2.2rem;}.hin{flex:1;min-width:0;}
 .hname{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .hlvl{font-size:.75rem;font-weight:700;opacity:.9;margin-top:2px;}
-.hstars{text-align:right;flex-shrink:0;}
-.hsc{font-size:1.4rem;font-weight:900;display:block;}
-.hsl{font-size:.66rem;opacity:.85;}
+.hstars{text-align:right;flex-shrink:0;}.hsc{font-size:1.4rem;font-weight:900;display:block;}.hsl{font-size:.66rem;opacity:.85;}
 .ham{background:rgba(255,255,255,.2);border:none;border-radius:10px;color:white;font-size:1.2rem;padding:7px 10px;cursor:pointer;flex-shrink:0;}
 .ham:hover{background:rgba(255,255,255,.3);}
-
-/* DRAWER */
 .ov{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.35);z-index:10000;display:none;}
 .ov.show{display:block;}
 .drw{position:fixed;top:0;right:-290px;width:270px;height:100%;background:white;z-index:10001;transition:right .3s ease;box-shadow:-4px 0 24px rgba(0,0,0,.15);padding:20px 16px;}
@@ -61,8 +52,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;paddi
 .drw-x{background:var(--bg);border:none;border-radius:8px;padding:6px 10px;font-size:.9rem;cursor:pointer;color:var(--muted);font-weight:800;}
 .drw-it{display:block;width:100%;padding:14px 16px;margin-bottom:10px;border-radius:14px;border:none;background:var(--bg);font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;color:var(--text);cursor:pointer;text-align:left;}
 .drw-it:hover{background:#f3e5f5;}
-
-/* FULL MODAL */
 .fmod{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:10002;overflow-y:auto;transform:translateY(100%);transition:transform .3s ease;}
 .fmod.open{transform:translateY(0);}
 .em-top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:white;position:sticky;top:0;z-index:5;box-shadow:0 2px 10px rgba(0,0,0,.08);}
@@ -86,8 +75,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;paddi
 .edit-del:hover{opacity:1;}
 .add-btn{width:100%;padding:12px;border-radius:14px;border:2px dashed var(--pl);background:white;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:800;color:var(--purple);cursor:pointer;margin-top:4px;}
 .add-btn:hover{background:#f8f0ff;}
-
-/* EMOJI PICKER */
 .ep-ov{z-index:10003;}
 .ep{position:fixed;bottom:-100%;left:0;right:0;max-height:58vh;background:white;border-radius:22px 22px 0 0;z-index:10004;transition:bottom .3s ease;overflow-y:auto;padding:0 16px 24px;}
 .ep.open{bottom:0;}
@@ -98,15 +85,12 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;paddi
 .eg-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin-bottom:4px;}
 .eg-btn{background:none;border:none;font-size:1.5rem;padding:5px;border-radius:8px;cursor:pointer;line-height:1;}
 .eg-btn:hover{background:var(--bg);}
-
-/* STATS, LEVEL, PROGRESS, TABS, SECTION, TASKS */
 .hol-btn{width:100%;padding:11px;border-radius:14px;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:800;cursor:pointer;margin-bottom:11px;transition:all .2s;}
 .hol-btn.off{border:2px dashed var(--pl);background:var(--white);color:var(--purple);}
 .hol-btn.on{border:2px solid #f39c12;background:#fff8e1;color:#e67e22;}
 .stats{display:flex;gap:10px;margin-bottom:11px;}
 .scard{flex:1;background:var(--white);border-radius:15px;padding:11px 13px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.07);}
-.sv{font-size:1.45rem;font-weight:900;color:var(--pd);display:block;}
-.sl{font-size:.7rem;font-weight:700;color:var(--muted);}
+.sv{font-size:1.45rem;font-weight:900;color:var(--pd);display:block;}.sl{font-size:.7rem;font-weight:700;color:var(--muted);}
 .lvlc{background:var(--white);border-radius:15px;padding:11px 15px;margin-bottom:11px;box-shadow:0 2px 10px rgba(0,0,0,.07);}
 .lvlt{display:flex;justify-content:space-between;font-weight:800;color:var(--text);font-size:.8rem;margin-bottom:6px;}
 .lbg{height:12px;background:#f3e5f5;border-radius:7px;overflow:hidden;}
@@ -197,6 +181,10 @@ const AVATARS=['🦄','🌟','👸','🦋','🐱','🐼','🌈','🐰','🌺','�
 const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 
+// ── LOCALSTORAGE (works on GitHub Pages) ───────────────
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function ld(k){try{const r=localStorage.getItem(k);return r?JSON.parse(r):null;}catch(e){return null;}}
+
 // ── DATE HELPERS ───────────────────────────────────────
 function routineDay(){
   const n=new Date(),b=n.getHours()>=6?n:new Date(n-86400000);
@@ -261,16 +249,12 @@ let selAv=AVATARS[0];
 
 function refreshSecs(){secs=rState._holiday?[getHolSec()]:getSections(dow);}
 
-// ── STORAGE ────────────────────────────────────────────
-async function sv(k,v){try{await window.storage.set(k,JSON.stringify(v));}catch(e){}}
-async function ld(k){try{const r=await window.storage.get(k);return r?JSON.parse(r.value):null;}catch(e){return null;}}
-
-async function loadAll(){
-  profile=await ld('profile');
-  const gd=await ld('gamedata');
+function loadAll(){
+  profile=ld('profile');
+  const gd=ld('gamedata');
   if(gd){gamedata=gd;if(!gamedata.holidayDays)gamedata.holidayDays=[];}
-  customTasks=await ld('customTasks');
-  rState=(await ld(rKey))||{};
+  customTasks=ld('customTasks');
+  rState=ld(rKey)||{};
   refreshSecs();activeTab=secs[0].id;
   profile?showMain():showOnboarding();
 }
@@ -301,10 +285,10 @@ function showOnboarding(){
   document.getElementById('nin').addEventListener('keydown',e=>{if(e.key==='Enter')submitOb();});
 }
 
-async function submitOb(){
+function submitOb(){
   const name=(document.getElementById('nin').value||'').trim();
   if(!name){document.getElementById('nin').style.borderColor='var(--pink)';return;}
-  profile={name,avatar:selAv};await sv('profile',profile);
+  profile={name,avatar:selAv};sv('profile',profile);
   document.getElementById('ob').innerHTML='';showMain();
 }
 
@@ -313,7 +297,11 @@ function openDrawer(){document.getElementById('dov').classList.add('show');docum
 function closeDrawer(){document.getElementById('dov').classList.remove('show');document.getElementById('drw').classList.remove('open');}
 
 // ── MAIN ───────────────────────────────────────────────
-function showMain(){document.getElementById('app').style.display='block';renderAll();setTimeout(()=>location.reload(),msToReset());}
+function showMain(){
+  document.getElementById('app').style.display='block';
+  renderAll();
+  setTimeout(()=>location.reload(),msToReset());
+}
 
 function renderAll(){
   const isHol=!!rState._holiday;
@@ -429,9 +417,9 @@ function openEdit(){
 
 function closeEdit(){document.getElementById('editMod').classList.remove('open');}
 
-async function saveEdit(){
+function saveEdit(){
   customTasks=JSON.parse(JSON.stringify(editDraft));
-  await sv('customTasks',customTasks);
+  sv('customTasks',customTasks);
   refreshSecs();activeTab=secs[0].id;
   renderAll();closeEdit();
 }
@@ -451,8 +439,11 @@ function renderEditTabs(){
 function renderEditContent(){
   const el=document.getElementById('emBody');if(!el)return;
   const tasks=editDraft[editSec];
-  let html=`<div class="bath-note">🛁 <b>Bath time</b> is added automatically — Mon morning · Tue & Thu night · Sat night. No need to add it manually.</div>`;
-  el.innerHTML=html;
+  el.innerHTML='';
+  const note=document.createElement('div');
+  note.className='bath-note';
+  note.innerHTML='🛁 <b>Bath time</b> is added automatically — Mon morning · Tue & Thu night · Sat night.';
+  el.appendChild(note);
   tasks.forEach((t,i)=>{
     const row=document.createElement('div');row.className='edit-row';
     row.innerHTML=`
@@ -460,7 +451,7 @@ function renderEditContent(){
         <button onclick="mvTask(${i},-1)">▲</button>
         <button onclick="mvTask(${i},1)">▼</button>
       </div>
-      <button class="edit-eb" id="eb_${i}" onclick="openEp(${i})">${t.e}</button>
+      <button class="edit-eb" onclick="openEp(${i})">${t.e}</button>
       <input class="edit-in" value="${t.l.replace(/"/g,'&quot;')}" oninput="editDraft['${editSec}'][${i}].l=this.value"/>
       <button class="edit-del" onclick="delTask(${i})">🗑️</button>`;
     el.appendChild(row);
@@ -470,17 +461,13 @@ function renderEditContent(){
   el.appendChild(add);
 }
 
-function mvTask(i,dir){
-  const t=editDraft[editSec],j=i+dir;
-  if(j<0||j>=t.length)return;
-  [t[i],t[j]]=[t[j],t[i]];renderEditContent();
-}
+function mvTask(i,dir){const t=editDraft[editSec],j=i+dir;if(j<0||j>=t.length)return;[t[i],t[j]]=[t[j],t[i]];renderEditContent();}
 function delTask(i){editDraft[editSec].splice(i,1);renderEditContent();}
 function addTask(){editDraft[editSec].push({id:`t${Date.now()}`,e:'⭐',l:'New Task'});renderEditContent();}
 
 // ── EMOJI PICKER ───────────────────────────────────────
-function openEp(taskIdx){
-  epCb=(emoji)=>{editDraft[editSec][taskIdx].e=emoji;renderEditContent();closeEp();};
+function openEp(idx){
+  epCb=(emoji)=>{editDraft[editSec][idx].e=emoji;renderEditContent();closeEp();};
   const el=document.getElementById('epick');
   let html=`<div class="ep-hd"><span>Pick an Emoji</span><button class="ep-close" onclick="closeEp()">✕ Close</button></div>`;
   EG.forEach(g=>{
@@ -515,22 +502,21 @@ function openProf(){
   m.classList.add('open');
 }
 function closeProfMod(){document.getElementById('profMod').classList.remove('open');}
-async function saveProf(){
+function saveProf(){
   const name=(document.getElementById('profName').value||'').trim();
   if(!name)return;
-  profile={name,avatar:profSelAv};
-  await sv('profile',profile);
+  profile={name,avatar:profSelAv};sv('profile',profile);
   closeProfMod();renderHdr();
 }
 
 // ── HOLIDAY TOGGLE ─────────────────────────────────────
-async function toggleHoliday(){
+function toggleHoliday(){
   rState._holiday=!rState._holiday;rState._bonus=false;
-  await sv(rKey,rState);refreshSecs();activeTab=secs[0].id;renderAll();
+  sv(rKey,rState);refreshSecs();activeTab=secs[0].id;renderAll();
 }
 
 // ── CHECK TASK ─────────────────────────────────────────
-async function checkTask(id,ev){
+function checkTask(id,ev){
   rState[id]=true;sv(rKey,rState);playTick();
   if(ev)showStarPop(ev.clientX,ev.clientY);
   gamedata.totalStars++;sv('gamedata',gamedata);
@@ -550,8 +536,10 @@ async function checkTask(id,ev){
     const isHol=!!rState._holiday;
     if(isHol){if(!gamedata.holidayDays.includes(rDay))gamedata.holidayDays.push(rDay);}
     else{if(!gamedata.completedDays.includes(rDay))gamedata.completedDays.push(rDay);}
-    await sv('gamedata',gamedata);await sv(rKey,rState);
-    playWin();setTimeout(()=>launchConfetti(isHol),300);setTimeout(()=>launchConfetti(isHol),1800);
+    sv('gamedata',gamedata);sv(rKey,rState);
+    playWin();
+    setTimeout(()=>launchConfetti(isHol),300);
+    setTimeout(()=>launchConfetti(isHol),1800);
     renderHdr();renderLvl();renderStats();
   }
 }
