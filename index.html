@@ -100,10 +100,10 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;min-h
 .hol-btn{width:100%;padding:11px;border-radius:14px;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:800;cursor:pointer;margin-bottom:11px;transition:all .2s;}
 .hol-btn.off{border:2px dashed var(--pl);background:var(--white);color:var(--purple);}
 .hol-btn.on{border:2px solid #f39c12;background:#fff8e1;color:#e67e22;}
-.stats{display:flex;gap:10px;margin-bottom:11px;}
+.stats{display:flex;gap:10px;margin-top:11px;}
 .scard{flex:1;background:var(--white);border-radius:15px;padding:11px 13px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.07);}
 .sv{font-size:1.45rem;font-weight:900;color:var(--pd);display:block;}.sl{font-size:.7rem;font-weight:700;color:var(--muted);}
-.lvlc{background:var(--white);border-radius:15px;padding:11px 15px;margin-bottom:11px;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.lvlc{background:var(--white);border-radius:15px;padding:11px 15px;margin-top:11px;box-shadow:0 2px 10px rgba(0,0,0,.07);}
 .lvlt{display:flex;justify-content:space-between;font-weight:800;color:var(--text);font-size:.8rem;margin-bottom:6px;}
 .lbg{height:12px;background:#f3e5f5;border-radius:7px;overflow:hidden;}
 .lfill{height:100%;background:linear-gradient(90deg,var(--gold),#f1c40f);border-radius:7px;transition:width .5s ease;}
@@ -137,7 +137,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;min-h
 </style>
 
 <script>
-// ── CONSTANTS ──────────────────────────────────────────
 const MORNING_DEF=[
   {id:'m1',e:'⏰',l:'Wake up & stretch'},
   {id:'m3',e:'👗',l:'Get dressed'},
@@ -172,7 +171,6 @@ const HOLIDAY_DEF=[
   {id:'h5',e:'🌙',l:'Bedtime routine'},
 ];
 const BATH={id:'bath',e:'🛁',l:'Bath time'};
-
 const EG=[
   {n:'⏰ Daily',e:['⏰','🌅','🌄','🌙','💤','😴','☀️','🌤️','🌈','✨','🌟','⭐','💫']},
   {n:'🧼 Hygiene',e:['🛁','🚿','🦷','🧼','🪥','💊','🧴','🧻','🪒','🧽']},
@@ -187,17 +185,14 @@ const EG=[
   {n:'🌺 Nature',e:['🌺','🌻','🌹','🌷','🌸','🍀','🌿','🌲','🌴','🌵','🌙','☀️','🌈','🌊','❄️','🔥','🌍']},
   {n:'😊 Faces',e:['😊','😍','🥰','😎','🤩','🥳','😴','🤗','😇','🙃','🤓','😋','🤪','😜','😝']},
 ];
-
 const LEVELS=[{min:0,name:'Seedling',emoji:'🌱'},{min:10,name:'Rising Star',emoji:'⭐'},{min:30,name:'Super Star',emoji:'🌟'},{min:70,name:'Champion',emoji:'💫'},{min:150,name:'Legend',emoji:'👑'}];
 const AVATARS=['🦄','🌟','👸','🦋','🐱','🐼','🌈','🐰','🌺','🎀','😊','🥰','🤩','😎','🥳','🦁','🐬','🦊','🐨','🎨','⭐','💖','🌸','🍀','🎵'];
 const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-// ── LOCALSTORAGE (works on GitHub Pages) ───────────────
 function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 function ld(k){try{const r=localStorage.getItem(k);return r?JSON.parse(r):null;}catch(e){return null;}}
 
-// ── DATE HELPERS ───────────────────────────────────────
 function routineDay(){
   const n=new Date(),b=n.getHours()>=6?n:new Date(n-86400000);
   return `${b.getFullYear()}-${String(b.getMonth()+1).padStart(2,'0')}-${String(b.getDate()).padStart(2,'0')}`;
@@ -228,7 +223,6 @@ function getSections(d){
 }
 function getHolSec(){return{id:'holiday',title:'Holiday Fun!',icon:'🏖️',tasks:[...base('holiday',HOLIDAY_DEF)]};}
 
-// ── AUDIO ──────────────────────────────────────────────
 let ac=null;
 function initAc(){if(!ac)try{ac=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}if(ac?.state==='suspended')ac.resume();}
 function tone(f,dur,type='sine',vol=0.2,delay=0){if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=type;o.frequency.value=f;const t=ac.currentTime+delay;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.001,t+dur);o.start(t);o.stop(t+dur);}
@@ -236,7 +230,6 @@ function playTick(){initAc();tone(650,.12,'sine',.18);tone(1000,.1,'sine',.14,.0
 function playSec(){initAc();[523,659,784].forEach((f,i)=>tone(f,.3,'sine',.18,i*.12));}
 function playWin(){initAc();[523,659,784,1047,1047,784,1047].forEach((f,i)=>tone(f,.35,'sine',.2,i*.13));}
 
-// ── CONFETTI ───────────────────────────────────────────
 const cc=document.getElementById('cc'),c2=cc.getContext('2d');
 let cparts=[],crun=false;
 const COLS=['#9b59b6','#e91e8c','#f48fb1','#ffd700','#c39bd3','#f39c12','#ff6b9d'];
@@ -249,11 +242,9 @@ function launchConfetti(hol=false){
 }
 function animC(){c2.clearRect(0,0,cc.width,cc.height);cparts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.angle+=p.spin;p.vy+=.06;c2.save();c2.translate(p.x,p.y);c2.rotate(p.angle);c2.fillStyle=p.color;if(p.shape==='c'){c2.beginPath();c2.arc(0,0,p.r/2,0,Math.PI*2);c2.fill();}else c2.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.5);c2.restore();});cparts=cparts.filter(p=>p.y<cc.height+20);if(cparts.length)requestAnimationFrame(animC);else{crun=false;c2.clearRect(0,0,cc.width,cc.height);}}
 
-// ── STAR POP ───────────────────────────────────────────
 const sp=document.getElementById('starPop');
 function showStarPop(x,y){sp.textContent='+1 ⭐';sp.style.cssText=`left:${x-20}px;top:${y-40}px;display:block;opacity:1;transform:translateY(0);transition:none;`;setTimeout(()=>{sp.style.cssText+=`;transition:all .8s ease;opacity:0;transform:translateY(-55px);`;},50);setTimeout(()=>{sp.style.display='none';},950);}
 
-// ── STATE ──────────────────────────────────────────────
 let profile=null,gamedata={totalStars:0,completedDays:[],holidayDays:[]},rState={},activeTab='',secs=[];
 let rDay=routineDay(),rKey=`routine:${rDay}`;
 const now=new Date(),dow=now.getDay();
@@ -271,7 +262,6 @@ function loadAll(){
   profile?showMain():showOnboarding();
 }
 
-// ── ONBOARDING ─────────────────────────────────────────
 function buildAvGrid(containerId,currentSel,onSelect){
   const g=document.getElementById(containerId);if(!g)return;
   g.innerHTML='';
@@ -304,11 +294,9 @@ function submitOb(){
   document.getElementById('ob').innerHTML='';showMain();
 }
 
-// ── DRAWER ─────────────────────────────────────────────
 function openDrawer(){document.getElementById('dov').classList.add('show');document.getElementById('drw').classList.add('open');}
 function closeDrawer(){document.getElementById('dov').classList.remove('show');document.getElementById('drw').classList.remove('open');}
 
-// ── MAIN ───────────────────────────────────────────────
 function showMain(){
   document.getElementById('app').style.display='block';
   renderAll();
@@ -320,15 +308,15 @@ function renderAll(){
   document.getElementById('app').innerHTML=`
     <div id="hdr"></div>
     <div id="holBtn"></div>
-    <div class="stats" id="stats"></div>
-    <div id="lvl"></div>
     <div class="pc">
       <div class="pt"><span>${isHol?'🏖️ Holiday Progress':'⭐ Today\'s Progress'}</span><span id="ptxt">0/0</span></div>
       <div class="pbg"><div class="${isHol?'pfill hol':'pfill'}" id="pfill" style="width:0%"></div></div>
       <div class="reward${isHol?' hol':''}" id="rwd">${isHol?'🎉 Amazing holiday! Great job! 🏖️✨':'🎉 You\'re a superstar! Every task done! 🌟💖'}</div>
     </div>
     <div class="tabs" id="tabs"></div>
-    <div id="sdiv"></div>`;
+    <div id="sdiv"></div>
+    <div id="lvl"></div>
+    <div class="stats" id="stats"></div>`;
   renderHdr();renderHolBtn();renderStats();renderLvl();renderTabs();renderSec();updateProg();
 }
 
@@ -401,7 +389,6 @@ function updateProg(){
   if(rw)rw.style.display=(done===all.length&&all.length>0)?'block':'none';
 }
 
-// ── EDIT ROUTINE ───────────────────────────────────────
 const EDIT_SECS=[{k:'morning',l:'🌅 Morning'},{k:'after',l:'📚 After School'},{k:'night',l:'🌙 Night'},{k:'weekend',l:'🌈 Weekend'},{k:'holiday',l:'🏖️ Holiday'}];
 let editSec='morning',editDraft={},epCb=null;
 
@@ -477,7 +464,6 @@ function mvTask(i,dir){const t=editDraft[editSec],j=i+dir;if(j<0||j>=t.length)re
 function delTask(i){editDraft[editSec].splice(i,1);renderEditContent();}
 function addTask(){editDraft[editSec].push({id:`t${Date.now()}`,e:'⭐',l:'New Task'});renderEditContent();}
 
-// ── EMOJI PICKER ───────────────────────────────────────
 function openEp(idx){
   epCb=(emoji)=>{editDraft[editSec][idx].e=emoji;renderEditContent();closeEp();};
   const el=document.getElementById('epick');
@@ -493,7 +479,6 @@ function openEp(idx){
 }
 function closeEp(){document.getElementById('epov').classList.remove('show');document.getElementById('epick').classList.remove('open');}
 
-// ── CHANGE PROFILE ─────────────────────────────────────
 let profSelAv='';
 function openProf(){
   profSelAv=profile.avatar;
@@ -521,13 +506,11 @@ function saveProf(){
   closeProfMod();renderHdr();
 }
 
-// ── HOLIDAY TOGGLE ─────────────────────────────────────
 function toggleHoliday(){
   rState._holiday=!rState._holiday;rState._bonus=false;
   sv(rKey,rState);refreshSecs();activeTab=secs[0].id;renderAll();
 }
 
-// ── CHECK TASK ─────────────────────────────────────────
 function checkTask(id,ev){
   rState[id]=true;sv(rKey,rState);playTick();
   if(ev)showStarPop(ev.clientX,ev.clientY);
